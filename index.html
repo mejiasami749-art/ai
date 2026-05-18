@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CX1 AI – Tu Asistente de Código e Inteligencia Artificial</title>
+    <!-- Tailwind CSS para un diseño moderno y rápido -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons para los iconos de la interfaz -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Personalización de la barra de desplazamiento */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ef4444;
+            border-radius: 3px;
+        }
+        .glow-red {
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+        }
+    </style>
+</head>
+<body class="bg-[#0b0b0c] text-gray-100 font-sans h-screen flex overflow-hidden">
+
+    <!-- BARRA LATERAL (SIDEBAR) -->
+    <aside class="w-64 bg-[#121214] border-r border-zinc-800 flex flex-col justify-between hidden md:flex">
+        <!-- Logo y Nuevo Chat -->
+        <div class="p-4">
+            <div class="flex items-center gap-3 mb-6 px-2">
+                <div class="bg-red-600 text-white p-2 rounded-xl shadow-lg shadow-red-600/30">
+                    <i data-lucide="terminal" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg tracking-wider text-white">CX1 <span class="text-red-500 glow-red">AI</span></h1>
+                    <p class="text-xs text-zinc-500 font-mono">v2.5 Flash</p>
+                </div>
+            </div>
+            
+            <button onclick="clearChat()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition border border-zinc-700/50 group">
+                <i data-lucide="plus" class="w-4 h-4 text-red-500 group-hover:scale-110 transition"></i>
+                Nuevo Chat
+            </button>
+
+            <!-- Historial / Navegación -->
+            <nav class="mt-6 space-y-1">
+                <p class="text-xs font-semibold text-zinc-500 px-2 uppercase tracking-wider mb-2">Herramientas</p>
+                <a href="#" class="flex items-center gap-3 px-3 py-2.5 bg-zinc-800/50 text-red-400 rounded-xl font-medium border-l-2 border-red-500">
+                    <i data-lucide="message-square" class="w-4 h-4"></i> Asistente Chat
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-zinc-400 hover:bg-zinc-800/40 hover:text-gray-200 rounded-xl transition">
+                    <i data-lucide="music" class="w-4 h-4 text-zinc-500"></i> Creador de Audio
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-zinc-400 hover:bg-zinc-800/40 hover:text-gray-200 rounded-xl transition">
+                    <i data-lucide="image" class="w-4 h-4 text-zinc-500"></i> Editor de Fotos
+                </a>
+            </nav>
+        </div>
+
+        <!-- Footer del Sidebar -->
+        <div class="p-4 border-t border-zinc-800 text-xs text-zinc-500 font-mono flex items-center justify-between">
+            <span>Samil Design © 2026</span>
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+        </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 flex flex-col relative h-full bg-[#0e0e10]">
+        
+        <!-- BARRA SUPERIOR -->
+        <header class="h-16 border-b border-zinc-800/80 px-6 flex items-center justify-between bg-[#0e0e10]/50 backdrop-blur-md sticky top-0 z-10">
+            <div class="flex items-center gap-4">
+                <button class="md:hidden text-zinc-400 hover:text-white">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs bg-red-950 text-red-400 px-2.5 py-1 rounded-full font-mono border border-red-900/50">Online</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="text-zinc-400 hover:text-white p-2 rounded-lg hover:bg-zinc-800/50 transition">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                </button>
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-red-600 to-amber-500 flex items-center justify-center font-bold text-sm shadow-md">
+                    C
+                </div>
+            </div>
+        </header>
+
+        <!-- ÁREA DE CHAT / CONTENIDO -->
+        <div id="chat-container" class="flex-1 overflow-y-auto p-6 space-y-6 flex flex-col">
+            
+            <!-- Estado Inicial: Pantalla de Bienvenida (Estilo Lovable/AI Coder) -->
+            <div id="welcome-screen" class="my-auto max-w-2xl mx-auto text-center space-y-6 py-12">
+                <div class="w-16 h-16 bg-gradient-to-b from-red-500 to-red-700 rounded-2xl mx-auto flex items-center justify-center shadow-xl shadow-red-600/20">
+                    <i data-lucide="sparkles" class="w-8 h-8 text-white animate-pulse"></i>
+                </div>
+                <div class="space-y-2">
+                    <h2 class="text-3xl font-extrabold tracking-tight text-white">¿Qué vamos a programar o crear hoy?</h2>
+                    <p class="text-zinc-400 text-sm max-w-md mx-auto">Tu asistente avanzado para desarrollo de scripts en Lua, páginas web, edición de contenido y optimización de código.</p>
+                </div>
+
+                <!-- Sugerencias rápidas -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 text-left">
+                    <button onclick="useSuggestion('Hazme un script en Lua para Roblox que guarde los datos del jugador')" class="p-4 rounded-xl bg-[#121214] border border-zinc-800/80 hover:border-red-500/50 hover:bg-[#161619] transition text-sm group">
+                        <span class="font-medium text-zinc-200 block mb-1 group-hover:text-red-400 transition">Script de Guardado</span>
+                        <span class="text-zinc-500 text-xs">Crea un DataStore completo para vehículos o dinero en Roblox.</span>
+                    </button>
+                    <button onclick="useSuggestion('Crea una interfaz moderna en HTML y CSS con colores oscuros')" class="p-4 rounded-xl bg-[#121214] border border-zinc-800/80 hover:border-red-500/50 hover:bg-[#161619] transition text-sm group">
+                        <span class="font-medium text-zinc-200 block mb-1 group-hover:text-red-400 transition">Diseño Web Completo</span>
+                        <span class="text-zinc-500 text-xs">Código limpio usando Tailwind CSS y estructuras optimizadas.</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Aquí se irán insertando los mensajes dinámicamente -->
+        </div>
+
+        <!-- ENTRADA DE TEXTO (INPUT) -->
+        <div class="p-4 bg-gradient-to-t from-[#0e0e10] via-[#0e0e10] to-transparent sticky bottom-0">
+            <div class="max-w-3xl mx-auto">
+                <form id="chat-form" onsubmit="sendMessage(event)" class="bg-[#121214] border border-zinc-800 rounded-2xl p-2 flex items-center shadow-2xl focus-within:border-red-500/50 transition duration-200">
+                    <input 
+                        type="text" 
+                        id="user-input" 
+                        placeholder="Pregúntale a CX1 AI o pega tu código aquí..." 
+                        class="flex-1 bg-transparent border-0 outline-none text-sm px-3 py-2.5 text-gray-100 placeholder-zinc-500"
+                        autocomplete="off"
+                    >
+                    <button type="submit" class="bg-red-600 hover:bg-red-500 text-white p-2.5 rounded-xl transition flex items-center justify-center shadow-lg shadow-red-600/20 active:scale-95">
+                        <i data-lucide="arrow-up" class="w-4 h-4"></i>
+                    </button>
+                </form>
+                <p class="text-[10px] text-zinc-600 text-center mt-2 font-mono">CX1 AI puede generar errores, verifica los scripts antes de usarlos en producción.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- SCRIPTS PARA EL FUNCIONAMIENTO DINÁMICO -->
+    <script>
+        // Inicializar Iconos de Lucide
+        lucide.createIcons();
+
+        const chatContainer = document.getElementById('chat-container');
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const userInput = document.getElementById('user-input');
+
+        function sendMessage(event) {
+            event.preventDefault();
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            // Ocultar pantalla de bienvenida si es el primer mensaje
+            if (welcomeScreen) {
+                welcomeScreen.style.display = 'none';
+            }
+
+            // Mensaje del Usuario
+            appendMessage(text, 'user');
+            userInput.value = '';
+
+            // Respuesta Simulada de la IA (Efecto de carga)
+            setTimeout(() => {
+                const aiResponse = `¡Entendido! Estoy procesando tu solicitud sobre: **"${text}"**. \n\nAquí tienes una plantilla base estructurada profesionalmente para tu proyecto en **CX1 AI**: \n\`\`\`javascript\n// Sistema Optimizado v2.5\nfunction initModule() {\n    console.log("Módulo cargado correctamente con Samil Design");\n}\n\`\`\``;
+                appendMessage(aiResponse, 'ai');
+            }, 800);
+        }
+
+        function appendMessage(text, sender) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `flex gap-4 max-w-3xl mx-auto w-full \${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+
+            const innerHTML = sender === 'user' 
+                ? `
+                    <div class="bg-zinc-800 text-gray-100 px-4 py-3 rounded-2xl max-w-[85%] text-sm border border-zinc-700/50">
+                        \${text}
+                    </div>
+                `
+                : `
+                    <div class="w-8 h-8 rounded-xl bg-red-600 flex items-center justify-center flex-shrink-0 text-white shadow-md">
+                        <i data-lucide="terminal" class="w-4 h-4"></i>
+                    </div>
+                    <div class="bg-[#121214] text-gray-200 px-4 py-3 rounded-2xl max-w-[85%] text-sm border border-zinc-800 space-y-2">
+                        <p class="font-semibold text-xs text-red-500 font-mono uppercase tracking-wider">CX1 AI</p>
+                        <div class="prose prose-invert text-zinc-300">\${text.replace(/\n/g, '<br>')}</div>
+                    </div>
+                `;
+
+            msgDiv.innerHTML = innerHTML;
+            chatContainer.appendChild(msgDiv);
+            
+            // Actualizar iconos del nuevo mensaje e ir al fondo
+            lucide.createIcons();
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function useSuggestion(phrase) {
+            userInput.value = phrase;
+            userInput.focus();
+        }
+
+        function clearChat() {
+            // Limpia los mensajes y vuelve a mostrar la bienvenida
+            const messages = chatContainer.querySelectorAll('div:not(#welcome-screen)');
+            messages.forEach(m => m.remove());
+            if (welcomeScreen) {
+                welcomeScreen.style.display = 'flex';
+            }
+        }
+    </script>
+</body>
+</html>
